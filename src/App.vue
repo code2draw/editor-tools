@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
+import PlaygroundPage from './components/PlaygroundPage.vue';
 </script>
 
 <template>
+  <PlaygroundPage />
   <header>
     <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
 
@@ -18,6 +20,12 @@ import TheWelcome from './components/TheWelcome.vue'
 </template>
 
 <style scoped>
+section {
+  width: 100%;
+  height: 85vh;
+  border: 2px dashed #AAA;
+  margin: 15px auto;
+}
 header {
   line-height: 1.5;
 }
