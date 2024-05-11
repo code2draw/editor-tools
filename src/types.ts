@@ -21,3 +21,8 @@ export interface MouseTrackerEvent {
     readonly clickButton?: number,
     readonly clickButtons?: number,
 }
+
+export interface ControlPointDragEvent {
+    start: TupplePoint,
+    end: TupplePoint,
+}
