@@ -3,14 +3,14 @@
  * Goal of this component is to track mouse click actions and emit vector of positions
  * where MouseDown and MouseUp events were triggered
  */
-import { defineEmits, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue';
+import { defineEmits, onMounted, onBeforeUnmount, getCurrentInstance, watch } from 'vue';
 import type { MouseTrackerEvent, TupplePoint } from '@/types';
 
 const props = defineProps({
     // Should the movement be tracked?
     movement: { type: Boolean, default: false },
     // Should the drag be tracked?
-    drag: { type: Boolean, default: false },
+    click: { type: Boolean, default: false },
     // Where should the mouse be tracked
     // - "body" - within body
     // - [HtmlElement] TupplePointement
@@ -27,17 +27,19 @@ onMounted(() => {
     let clickPosition: TupplePoint | undefined = undefined;
     let clickButtons: number | undefined = undefined;
     let clickButton: number | undefined = undefined;
+    let unregisterCb = () => {};
     const parentEl = getParentElement();
 
     function emitEvent(button: number, buttons: number) {
-        emit('change', {
+        const data: MouseTrackerEvent = {
             position: currentPosition,
             clickPosition,
             button,
             buttons,
             clickButton,
             clickButtons,
-        });
+        };
+        emit('change', data);
     }
 
     function onMouseMove(e: MouseEvent) {
@@ -55,7 +57,8 @@ onMounted(() => {
     }
 
     function onMouseUp(e: MouseEvent) {
-        if (props.drag) {
+        if (props.click) {
+            currentPosition = [e.x, e.y];
             emitEvent(e.button, e.buttons);
         }
         clickPosition = undefined;
@@ -63,7 +66,21 @@ onMounted(() => {
         clickButtons = undefined;
     }
 
-    registerListeners(parentEl, onMouseDown, onMouseUp, onMouseMove);
+    watch([() => props.click, () => props.movement], () => {
+        unregisterCb();
+        clickPosition = undefined;
+        clickButton = undefined;
+        clickButtons = undefined;
+
+        unregisterCb = registerListeners(
+            parentEl,
+            onMouseMove,
+            props.click ? onMouseDown : undefined,
+            props.click ? onMouseUp : undefined,
+        );
+    }, { immediate: true });
+
+    onBeforeUnmount(() => unregisterCb());
 });
 
 
@@ -88,21 +105,19 @@ function getParentElement(): HTMLElement {
 
 function registerListeners(
     target: HTMLElement,
-    mouseDownCb: (ev: MouseEvent) => void,
-    mouseUpCb: (ev: MouseEvent) => void,
     mouseMoveCb: (ev: MouseEvent) => void,
+    mouseDownCb?: (ev: MouseEvent) => void,
+    mouseUpCb?: (ev: MouseEvent) => void,
 ) {
-    target.addEventListener('mousedown', mouseDownCb, { passive: true });
-    target.addEventListener('mouseup', mouseUpCb, { passive: true });
     target.addEventListener('mousemove', mouseMoveCb, { passive: true });
+    mouseDownCb && target.addEventListener('mousedown', mouseDownCb, { passive: true });
+    mouseUpCb && target.addEventListener('mouseup', mouseUpCb, { passive: true });
 
-    console.log('Registering listeners', target);
-
-    onBeforeUnmount(() => {
-        target.removeEventListener('mousedown', mouseDownCb);
-        target.removeEventListener('mouseup', mouseUpCb);
+    return () => {
         target.removeEventListener('mousemove', mouseMoveCb);
-    })
+        mouseDownCb && target.removeEventListener('mousedown', mouseDownCb);
+        mouseUpCb && target.removeEventListener('mouseup', mouseUpCb);
+    };
 }
 </script>
 <template>
