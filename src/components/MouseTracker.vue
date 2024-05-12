@@ -121,7 +121,5 @@ function registerListeners(
 }
 </script>
 <template>
-    <span>
-        <!-- Mouse Vector -->
-    </span>
+    <span class="mouse-tracker"></span>
 </template>

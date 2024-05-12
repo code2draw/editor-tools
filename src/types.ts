@@ -26,3 +26,12 @@ export interface ControlPointDragEvent {
     start: TupplePoint,
     end: TupplePoint,
 }
+
+export interface KeyboardTrackerEvent {
+    key: string,
+    direction: 'down' | 'up',
+    shift: boolean,
+    ctrl: boolean,
+    alt: boolean,
+    meta: boolean,
+}
