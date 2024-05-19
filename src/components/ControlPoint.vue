@@ -14,6 +14,7 @@ import type { ControlPointDragEvent, TupplePoint } from '@/types';
 
 const props = defineProps({
     position: { type: Array as unknown as PropType<[number, number]>, required: true },
+    color: { type: String, default: 'rgba(200, 200, 0, 0.5)' },
 });
 const emit = defineEmits<{
     (e: 'drag', value: ControlPointDragEvent): void,
@@ -69,6 +70,7 @@ const style = computed(() => {
     return {
         left: `${props.position[0]}px`,
         top: `${props.position[1]}px`,
+        'border-color': props.color,
     }
 });
 </script>

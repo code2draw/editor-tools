@@ -14,6 +14,7 @@ const props = defineProps({
     // - [HtmlElement] Element
     // - [undefined] - within parent
     target: { type: [HTMLElement, String], default: undefined },
+    color: { type: String, default: 'rgba(255, 255, 0, 0.7)' },
 });
 
 const rectEl = ref<HTMLDivElement>();
@@ -66,6 +67,7 @@ onMounted(() => {
     }
 
     watch(() => props.target, () => targetEl.value = getTargetElement(props.target), { immediate: true });
+    watch(() => props.color, () => rectEl.value!.style.borderColor = props.color, { immediate: true });
 
     watch([() => targetEl], () => {
         unregisterCb();
@@ -91,7 +93,7 @@ onMounted(() => {
 <style>
 .selection-rectangle {
     position: absolute;
-    border: 1px dashed rgba(255, 255, 0, 0.7);
+    border: 1px dashed rgba(0, 255, 0, 0.7);
 }
 .selection-rectangle.hidden { display: none; }
 </style>

@@ -11,6 +11,7 @@ const mouseTrackerClick = ref<boolean>(true);
 const mouseTrackerData = ref<MouseTrackerEvent>({} as any);
 
 const controlPointPosition = ref<TupplePoint>([50, 200]);
+const controlPointPosition2 = ref<TupplePoint>([80, 200]);
 
 const keyboardTrackerDown = ref<boolean>(true);
 const keyboardTrackerUp = ref<boolean>(true);
@@ -44,6 +45,7 @@ const selectionData = ref<MouseTrackerEvent>({} as any);
         <pre>{{ controlPointPosition }}</pre>
         <div>
             <ControlPoint target="body" :position="controlPointPosition" @drag="controlPointPosition=$event.end"/>
+            <ControlPoint color="red" :position="controlPointPosition2" @drag="controlPointPosition2=$event.end"/>
         </div>
     </section>
 
