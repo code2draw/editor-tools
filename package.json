@@ -1,13 +1,30 @@
 {
   "name": "@c2d/editor-tools",
   "version": "0.0.1",
-  "keywords": ["graphic editor tools", "selection", "select", "move", "drag", "transform", "rotate"],
+  "keywords": [
+    "graphic editor tools",
+    "selection",
+    "select",
+    "move",
+    "drag",
+    "transform",
+    "rotate"
+  ],
   "author": "Jakub Tušan",
   "license": "MIT",
   "type": "module",
+  "files": ["dist"],
+  "main": "./dist/c2d-editor-components.umd.js",
+  "module": "./dist/c2d-editor-components.js",
+  "exports": {
+    ".": {
+      "import": "./dist/c2d-editor-components.js",
+      "require": "./dist/c2d-editor-components.umd.js"
+    }
+  },
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check \"build-only {@}\" --",
+    "build": "rimraf ./dist && run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "test:unit": "vitest",
     "test:e2e": "playwright test",
@@ -15,7 +32,7 @@
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
-  "dependencies": {
+  "peerDependencies": {
     "vue": "^3.4.21"
   },
   "devDependencies": {
@@ -36,6 +53,10 @@
     "typescript": "~5.4.0",
     "vite": "^5.1.6",
     "vitest": "^1.4.0",
+    "vue": "^3.4.21",
     "vue-tsc": "^2.0.6"
+  },
+  "dependencies": {
+    "rimraf": "^5.0.7"
   }
 }
